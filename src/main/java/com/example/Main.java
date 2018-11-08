@@ -63,7 +63,7 @@ public class Main {
   @RequestMapping("/rest/test")
   @ResponseBody
   public String Test() {
-	  return "{'message' : 'success'}";
+	  return "{\"message\" : \"success\"}";
   }
   
 
