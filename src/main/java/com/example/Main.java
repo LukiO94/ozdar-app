@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.sql.DataSource;
 
@@ -59,8 +60,8 @@ public class Main {
     }
   }
   
-  
   @RequestMapping("/rest/test")
+  @ResponseBody
   public String Test() {
 	  return "{'message' : 'success'}";
   }
