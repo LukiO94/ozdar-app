@@ -8,7 +8,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -67,13 +69,13 @@ public class Main {
 	  return "{\"message\" : \"success\"}";
   }
   
-  @RequestMapping("/login")
+  @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json")
   @ResponseBody
-  public String login(@RequestParam String username, @RequestParam String password) {
+  public String login(@RequestBody UserDAO user) {
 	  
 	  String token = "";
 	  
-	  token += username + "@" + password;
+	  token += user.getName() + "@" + user.getPassword();
 	  
 	  return "{\"token\" : \"" + token + "\"}";
   }
