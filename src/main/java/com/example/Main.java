@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.sql.DataSource;
@@ -64,6 +65,17 @@ public class Main {
   @ResponseBody
   public String Test() {
 	  return "{\"message\" : \"success\"}";
+  }
+  
+  @RequestMapping("/login")
+  @ResponseBody
+  public String login(@RequestParam String username, @RequestParam String password) {
+	  
+	  String token = "";
+	  
+	  token += username + "@" + password;
+	  
+	  return token;
   }
   
 
