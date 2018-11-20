@@ -75,7 +75,7 @@ public class Main {
 	  
 	  token += username + "@" + password;
 	  
-	  return token;
+	  return "{\"token\" : \"" + token + "\"}";
   }
   
 
