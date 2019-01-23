@@ -1,95 +1,82 @@
 package com.example;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.sql.DataSource;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Map;
 
 @Controller
 @SpringBootApplication
 public class Main {
 
-  @Value("${spring.datasource.url}")
-  private String dbUrl;
-
-  @Autowired
-  private DataSource dataSource;
-
-  public static void main(String[] args) throws Exception {
-    SpringApplication.run(Main.class, args);
-  }
-
-  @RequestMapping("/")
-  String index() {
-    return "index";
-  }
-
-  @RequestMapping("/db")
-  String db(Map<String, Object> model) {
-    try (Connection connection = dataSource.getConnection()) {
-      Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-      stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-      ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-
-      ArrayList<String> output = new ArrayList<String>();
-      while (rs.next()) {
-        output.add("Witam o godzinie: " + rs.getTimestamp("tick"));
-      }
-
-      model.put("records", output);
-      return "db";
-    } catch (Exception e) {
-      model.put("message", e.getMessage());
-      return "error";
-    }
-  }
-  
-  @RequestMapping("/rest/test")
-  @ResponseBody
-  public String Test() {
-	  return "{\"message\" : \"success\"}";
-  }
-  
-  @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json")
-  @ResponseBody
-  public String login(@RequestBody UserDAO user) {
-	  
-	  String token = "";
-	  
-	  token += user.getName() + "@" + user.getPassword();
-	  
-	  return "{\"token\" : \"" + token + "\"}";
-  }
-  
-
-  @Bean
-  public DataSource dataSource() throws SQLException {
-    if (dbUrl == null || dbUrl.isEmpty()) {
-      return new HikariDataSource();
-    } else {
-      HikariConfig config = new HikariConfig();
-      config.setJdbcUrl(dbUrl);
-      return new HikariDataSource(config);
-    }
-  }
-
+	public static void main(String[] args) throws Exception {
+		SpringApplication.run(Main.class, args);
+	}
+	
+	@RequestMapping("/system-ekspercki")
+	String systemyEksperckie() {
+		
+		return "system-ekspercki";
+	}
+	
+	@RequestMapping(value="/system-ekspercki-rezultat")
+	String systemyEksperckieRezultat(
+			Model model,
+			@RequestParam("staz") int staz,
+			@RequestParam("wiek") int wiek,
+			@RequestParam("dochod") int dochod,
+			@RequestParam("wyksztalcenie") boolean czyWyzszeWyksztalcenie,
+			@RequestParam("majatek") boolean czyMajatekPowyzej100Tys,
+			@RequestParam("posiadaneKredyty") int posiadaneKredyty,
+			@RequestParam("sumaRat") int sumaRat) {
+		int wynik = 0;
+		
+		System.out.println(staz);
+		System.out.println(wiek);
+		System.out.println(dochod);
+		System.out.println(czyWyzszeWyksztalcenie);
+		System.out.println(czyMajatekPowyzej100Tys);
+		System.out.println(posiadaneKredyty);
+		System.out.println(sumaRat);
+		System.out.println((double)(0.33 * dochod));
+		
+		//sprawdzenie stazu pracy
+		if (staz > 0 && staz < 3) wynik += 4;
+		else if(staz > 3) wynik += 12;
+		
+		//sprawdzenie wieku
+		if (wiek > 18 && wiek < 24) wynik += 2;
+		else if (wiek > 25 && wiek < 34) wynik += 6;
+		else if (wiek > 35 && wiek < 49) wynik += 8;
+		
+		//sprawdzenie dochodu
+		if (dochod < 3000) wynik += 5;
+		else if (dochod > 3000 && dochod < 6000) wynik += 20;
+		else wynik += 34;
+		
+		//sprawdzenie wyksztalcenia
+		if (czyWyzszeWyksztalcenie) wynik += 6;
+		
+		//sprawdzenie wielkosci majątku
+		if (czyMajatekPowyzej100Tys) wynik += 15;
+		else wynik += 5;
+		
+		//sprawdzenie ilosci posiadanych kredytów
+		if (posiadaneKredyty < 3) wynik += 10;
+		
+		//sprawdzenie sumy rat
+		if ((double)sumaRat < (double)(0.33 * dochod)) {
+			wynik += 15;
+		}
+		
+		if(wynik > 45) model.addAttribute("message", "Otrzymasz kredyt z dużą szansą");
+		else model.addAttribute("message", "Otrzymasz kredyt z małą szansą");
+		model.addAttribute("wynik", wynik);
+		
+		return "system-ekspercki-rezultat";
+	}
 }
