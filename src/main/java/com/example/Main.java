@@ -35,15 +35,6 @@ public class Main {
 			@RequestParam("sumaRat") int sumaRat) {
 		int wynik = 0;
 		
-		System.out.println(staz);
-		System.out.println(wiek);
-		System.out.println(dochod);
-		System.out.println(czyWyzszeWyksztalcenie);
-		System.out.println(czyMajatekPowyzej100Tys);
-		System.out.println(posiadaneKredyty);
-		System.out.println(sumaRat);
-		System.out.println((double)(0.33 * dochod));
-		
 		//sprawdzenie stazu pracy
 		if (staz > 0 && staz <= 3) wynik += 4;
 		else if(staz > 3) wynik += 12;
@@ -69,9 +60,8 @@ public class Main {
 		if (posiadaneKredyty < 2) wynik += 10;
 		
 		//sprawdzenie sumy rat
-		if ((double)sumaRat < (double)(0.33 * dochod)) {
-			wynik += 15;
-		}
+		if ((double)sumaRat < (double)(0.33 * dochod)) wynik += 15;
+		
 		
 		if(wynik > 67) model.addAttribute("message", "Otrzymasz kredyt z dużą szansą");
 		else if(wynik < 67 && wynik > 33) model.addAttribute("message", "Otrzymasz kredyt ze średnią szansą");
