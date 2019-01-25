@@ -45,17 +45,17 @@ public class Main {
 		System.out.println((double)(0.33 * dochod));
 		
 		//sprawdzenie stazu pracy
-		if (staz > 0 && staz < 3) wynik += 4;
+		if (staz > 0 && staz <= 3) wynik += 4;
 		else if(staz > 3) wynik += 12;
 		
 		//sprawdzenie wieku
-		if (wiek > 18 && wiek < 24) wynik += 2;
-		else if (wiek > 25 && wiek < 34) wynik += 6;
-		else if (wiek > 35 && wiek < 49) wynik += 8;
+		if (wiek > 18 && wiek < 25) wynik += 2;
+		else if (wiek >= 25 && wiek < 34) wynik += 6;
+		else if (wiek >= 35 && wiek < 49) wynik += 8;
 		
 		//sprawdzenie dochodu
 		if (dochod < 3000) wynik += 5;
-		else if (dochod > 3000 && dochod < 6000) wynik += 20;
+		else if (dochod >= 3000 && dochod < 6000) wynik += 20;
 		else wynik += 34;
 		
 		//sprawdzenie wyksztalcenia
@@ -66,14 +66,15 @@ public class Main {
 		else wynik += 5;
 		
 		//sprawdzenie ilosci posiadanych kredytów
-		if (posiadaneKredyty < 3) wynik += 10;
+		if (posiadaneKredyty < 2) wynik += 10;
 		
 		//sprawdzenie sumy rat
 		if ((double)sumaRat < (double)(0.33 * dochod)) {
 			wynik += 15;
 		}
 		
-		if(wynik > 45) model.addAttribute("message", "Otrzymasz kredyt z dużą szansą");
+		if(wynik > 67) model.addAttribute("message", "Otrzymasz kredyt z dużą szansą");
+		else if(wynik < 67 && wynik > 33) model.addAttribute("message", "Otrzymasz kredyt ze średnią szansą");
 		else model.addAttribute("message", "Otrzymasz kredyt z małą szansą");
 		model.addAttribute("wynik", wynik);
 		
