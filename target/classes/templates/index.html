@@ -1,14 +1,57 @@
-<!doctype html>
-<html>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Java Getting Started on Heroku</title>
-    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+	<title>Moja aplikacja</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-
-	<h1>Hello world!</h1>
+	Siemka!
+	<input type="button" value="Pobierz wszystkich userów" id="getRequestButton">
 	
+
+	<div sec:authorize="isAuthenticated()">
+		<input type="button" value="Logout" id="logout"/>
+		
+		<div id="responseData"></div>
+		
+	</div>
+	<div sec:authorize="isAnonymous()">
+		<a th:href="@{/logowanie}">Log in</a>
+		<a th:href="@{/register}">Register</a>
+	</div>
+
+	<script>
+        $(function() {
+            $("#getRequestButton").click(function(){
+            	$.ajax({
+		             type: "GET",
+		             url: "/users/all",
+		             success: function (response, status, xhr) {
+		                 $("#responseData").text(JSON.stringify(response));
+		             },
+		             error: function (e) {
+		                 console.log("error");
+		             }
+				});
+            });
+            $("#logout").click(function(){
+            	$.ajax({
+    	             type: "GET",
+    	             url: "/logout",
+    	             success: function (response, status, xhr) {
+    	                 console.log("Status: " + status);
+    	                 window.location.replace("http://localhost:8080/");
+    	             },
+    	             error: function (response, status, xhr) {
+    	            	 console.log("Status: " + status);
+    	                 console.log(xhr);
+    	             }
+    			});
+            });
+        });
+        </script>  
 
 </body>
 </html>

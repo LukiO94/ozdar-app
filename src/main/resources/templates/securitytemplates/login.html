@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Moja aplikacja - logowanie</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+    <body>
+        
+        <div id="errorMsg" style="color:red;"></div>
+        
+        <div><label> User Name : <input type="text" name="username" id="username"/> </label></div>
+        <div><label> Password: <input type="password" name="password" id="password"/> </label></div>
+        <div><input type="button" value="Sign In" id="submitForm"/></div>
+        
+        <script>
+        $(function() {
+            $("#submitForm").click(function(){
+            	let data = {};
+            	data.username = $("#username").val();
+            	data.password = $("#password").val();
+            	
+            	$.ajax({
+		             type: "POST",
+		             url: "/login",
+		             data: data,
+		             success: function (response, status, xhr) {
+		            	window.location.replace("http://localhost:8080/");
+		             },
+		             error: function (e) {
+		            	 $("#errorMsg").text("Błąd");
+		             }
+				});
+            });
+        });
+        </script>    
+        
+    </body>
+</html>
